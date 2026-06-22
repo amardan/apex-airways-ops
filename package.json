@@ -1,0 +1,9 @@
+{
+  "name": "apex-airways-ops",
+  "version": "1.0.0",
+  "description": "Apex Airways multi-agent Gemini operations pipeline",
+  "type": "module",
+  "scripts": {
+    "pipeline": "node scripts/run-pipeline.mjs"
+  }
+}

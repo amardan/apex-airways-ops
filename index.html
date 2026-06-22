@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Apex AirLink Passenger Messaging System</title>
+  
+  <!-- Main Stylesheet -->
+  <link rel="stylesheet" href="./style.css">
+  
+  <!-- Preconnect to CDNs -->
+  <link rel="preconnect" href="https://unpkg.com">
+</head>
+<body>
+  
+  <div class="dashboard-container">
+    
+    <!-- Header -->
+    <header>
+      <div class="logo-section">
+        <h1>Apex AirLink Passenger Messaging System</h1>
+        <div class="airport-selector-wrapper" style="display: flex; align-items: center; gap: 0.5rem; margin-top: 0.4rem; flex-wrap: wrap;">
+          <span class="control-label" style="font-size: 0.72rem;">Active Hub:</span>
+          <span class="system-note" style="font-size: 0.75rem; color: var(--text-primary); font-weight: 700; background: rgba(0,0,0,0.03); border: 1px solid var(--border); padding: 0.15rem 0.45rem; border-radius: 4px;">
+            Washington Dulles (IAD)
+          </span>
+        </div>
+      </div>
+      <div class="system-status" style="display: flex; flex-direction: column; align-items: flex-end; gap: 0.4rem;">
+        <a href="/" class="btn-secondary-link" style="margin-bottom: 0.25rem;">← Return to Portfolio</a>
+        <div class="update-ticker" id="live-clock" style="font-weight: 700; color: var(--accent-blue);">
+          Current Time: Loading...
+        </div>
+        <div class="update-ticker" id="update-ticker">
+          Last Scan: Polling data...
+        </div>
+
+      </div>
+    </header>
+
+
+    <!-- Tab Navigation -->
+    <div class="tab-navigation">
+      <button class="tab-btn active" data-tab="live-ops">
+        <i data-lucide="activity"></i> Live Operations Board
+      </button>
+      <button class="tab-btn" data-tab="workflow-explained">
+        <i data-lucide="git-branch"></i> Agentic Workflow Explained
+      </button>
+    </div>
+
+    <!-- Tab Content 1: Live Operations Board -->
+    <div class="tab-content active" id="tab-live-ops">
+      <!-- Weather Status Bar (Unified Current Conditions & 5h Forecast) -->
+      <div class="weather-status-bar" id="card-iad">
+        <div class="current-weather">
+          <span class="hub-label">Dulles Hub (IAD)</span>
+          <span class="temp" id="iad-weather-val">--°F</span>
+          <span class="desc" id="iad-weather-desc">Loading weather...</span>
+        </div>
+        <div class="forecast-section">
+          <span class="forecast-label">5h Forecast:</span>
+          <div class="forecast-timeline" id="iad-forecast-container"></div>
+        </div>
+      </div>
+
+      <!-- Column Headers Row -->
+      <div class="workspace-header-row">
+        <div class="column-header">
+          <span class="agent-badge">Agent 1</span>
+          <h2>Scenario Generator</h2>
+          <p class="column-desc">Generates a fictional passenger narrative — who they are, where they're from, and why they travel.</p>
+        </div>
+        
+        <div class="flow-arrow-spacer"></div>
+
+        <div class="column-header">
+          <span class="agent-badge">Agent 2</span>
+          <h2>Operational Analyzer</h2>
+          <p class="column-desc">Writes a strict ops log entry — transit, travel time to IAD, active conditions, and status.</p>
+        </div>
+
+        <div class="flow-arrow-spacer"></div>
+
+        <div class="column-header">
+          <span class="agent-badge">Agent 3</span>
+          <h2>CX Outreach Director</h2>
+          <p class="column-desc">Drafts the passenger SMS — tone selected entirely by urgency tier (Critical / Hold / Standby).</p>
+        </div>
+      </div>
+
+      <!-- Traveler Rows Board -->
+      <div class="traveler-list-container" id="traveler-list-container">
+        <div style="text-align: center; padding: 3rem; color: var(--text-secondary);">
+          Loading messaging board...
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab Content 2: Agentic Workflow Explained -->
+    <div class="tab-content" id="tab-workflow-explained">
+      <div class="workflow-section">
+        
+        <div class="workflow-header">
+          <h2>Behind the Scenes &mdash; System Architecture</h2>
+          <p>
+            A scheduled three-agent Gemini pipeline that runs automatically via GitHub Actions. Each run fetches live weather from Open-Meteo, computes all travel times and schedule deadlines <strong>deterministically in Node.js</strong> using a static DMV neighborhood registry, then passes the verified data through three sequential Gemini calls: generating a fictional traveler scenario, writing an operational narrative summary, and drafting a passenger SMS notification.
+          </p>
+          <p style="margin-top: 0.75rem; margin-bottom: 0;">
+            <a href="https://github.com/amardan/apex-airways-ops" target="_blank" class="github-repo-link">
+              <i data-lucide="github" style="width: 14px; height: 14px; vertical-align: middle; margin-right: 4px;"></i>
+              View Project on GitHub
+            </a>
+          </p>
+        </div>
+
+        <!-- Input Feeds & Static Registry -->
+        <div class="workflow-section-title" style="margin-top: 2rem; margin-bottom: 1rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem;">
+          <h3 style="font-size: 1.1rem; font-family: var(--font-display); color: var(--text-primary); display: flex; align-items: center; gap: 0.5rem;">
+            <i data-lucide="database" style="width: 18px; height: 18px; color: var(--accent-blue);"></i>
+            1. Input Feeds &amp; Neighborhood Registry
+          </h3>
+        </div>
+        <div class="workflow-steps-grid" style="grid-template-columns: 1fr 1fr; margin-bottom: 2rem;">
+          <div class="workflow-step-card">
+            <div class="step-card-header">
+              <span class="step-number-badge">A</span>
+              <h3>Live Meteorological Feeds</h3>
+            </div>
+            <div class="step-card-body">
+              <p style="font-size: 0.8rem; margin-bottom: 0.75rem; color: var(--text-secondary);">
+                Fetched dynamically at the start of each pipeline execution.
+              </p>
+              <ul>
+                <li><strong>Regional Feeds:</strong> Queries the Open-Meteo REST API for live weather conditions at Dulles International Airport (IAD).</li>
+                <li><strong>Destination Feeds:</strong> Fetches current conditions for all active flight destinations (ORD, LAX, MIA, JFK, LHR, AUA).</li>
+                <li><strong>Forecasting:</strong> Maps weather conditions to extract a 5-hour local forecast for Dulles operations.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="workflow-step-card">
+            <div class="step-card-header">
+              <span class="step-number-badge">B</span>
+              <h3>DMV Neighborhood Registry</h3>
+            </div>
+            <div class="step-card-body">
+              <p style="font-size: 0.8rem; margin-bottom: 0.75rem; color: var(--text-secondary);">
+                A static baseline lookup registry containing neighborhood routes.
+              </p>
+              <ul>
+                <li><strong>Base Durations:</strong> Hardcoded baseline travel times for Car/Drive and Metro transits.</li>
+                <li><strong>Bridge Crossings:</strong> Flags locations requiring passage over the American Legion Bridge (e.g. Bethesda, Rockville, Silver Spring).</li>
+                <li><strong>Metro Connectivity:</strong> Identifies direct transit links and marks Metro-less neighborhoods (Leesburg, Chantilly).</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- Cooperative Agentic Execution -->
+        <div class="workflow-section-title" style="margin-bottom: 1rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem;">
+          <h3 style="font-size: 1.1rem; font-family: var(--font-display); color: var(--text-primary); display: flex; align-items: center; gap: 0.5rem;">
+            <i data-lucide="cpu" style="width: 18px; height: 18px; color: var(--accent-green);"></i>
+            2. Multi-Agent Pipeline Execution
+          </h3>
+        </div>
+        <div class="workflow-steps-grid" style="margin-bottom: 2.5rem;">
+          <div class="workflow-step-card">
+            <div class="step-card-header">
+              <span class="step-number-badge">1</span>
+              <h3>Agent 1 &mdash; Fictional Scenario Generator</h3>
+            </div>
+            <div class="step-card-body">
+              <p style="font-size: 0.8rem; margin-bottom: 0.75rem; color: var(--text-secondary);">
+                Fictional traveler simulation (Gemini LLM Call 1).
+              </p>
+              <ul>
+                <li><strong>Gemini Scenario Gen:</strong> Uses Gemini to simulate exactly 1 passenger group, origin neighborhood key, transit mode, and destination.</li>
+                <li><strong>Location & Time Constraints:</strong> Selects a valid DMV location key from the registry and schedules departure within 3 to 6 hours after current run time.</li>
+                <li><strong>Blindness Constraint:</strong> Completely blind to live weather feeds, travel times, buffers, or statuses to keep the story creation unbiased.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="workflow-step-card">
+            <div class="step-card-header">
+              <span class="step-number-badge">2</span>
+              <h3>Agent 2 &mdash; Operational Analyzer</h3>
+            </div>
+            <div class="step-card-body">
+              <p style="font-size: 0.8rem; margin-bottom: 0.75rem; color: var(--text-secondary);">
+                Operational narrative summary (Gemini LLM Call 2).
+              </p>
+              <ul>
+                <li><strong>Verify-Only Role:</strong> All travel times, departure times, and schedule deadlines are computed server-side in Node.js before this agent is called. Agent 2 receives pre-computed, 5-minute-rounded figures as authoritative facts.</li>
+                <li><strong>Narrative Writing:</strong> Writes a 1–2 sentence plain-English ops summary describing the passenger's travel situation, active conditions, and status determination for the CX Director.</li>
+                <li><strong>No Recalculation:</strong> Explicitly instructed not to modify, second-guess, or recalculate any figures — eliminating LLM arithmetic hallucination risk entirely.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="workflow-step-card">
+            <div class="step-card-header">
+              <span class="step-number-badge">3</span>
+              <h3>Agent 3 &mdash; CX Outreach Director</h3>
+            </div>
+            <div class="step-card-body">
+              <p style="font-size: 0.8rem; margin-bottom: 0.75rem; color: var(--text-secondary);">
+                Passenger SMS drafting (Gemini LLM Call 3).
+              </p>
+              <ul>
+                <li><strong>Tone Selection:</strong> Receives the pre-determined status (ACTION REQUIRED / PASS / WAIT) and picks the correct message tier — CRITICAL, HOLD/DELAY, or NORMAL/STANDBY.</li>
+                <li><strong>SMS Copywriting:</strong> Drafts a personalised notification using the passenger's first name, exact must-leave time, transit mode, travel mins to IAD, and active delay conditions.</li>
+                <li><strong>Guardrails:</strong> Explicitly instructed not to recalculate or modify any times — all figures come from the pre-computed operational report and are used verbatim.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- SVG Flow Diagram -->
+        <div class="workflow-section-title" style="margin-bottom: 1.5rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem;">
+          <h3 style="font-size: 1.1rem; font-family: var(--font-display); color: var(--text-primary); display: flex; align-items: center; gap: 0.5rem;">
+            <i data-lucide="git-branch" style="width: 18px; height: 18px; color: var(--accent-red);"></i>
+            3. Pipeline Flow Diagram
+          </h3>
+        </div>
+        <div class="workflow-diagram-container" style="margin-bottom: 2.5rem;">
+          <svg viewBox="0 0 1120 260" class="workflow-svg">
+            <defs>
+              <marker id="arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                <path d="M 0 2 L 8 5 L 0 8 z" fill="var(--text-primary)" />
+              </marker>
+              <marker id="arrow-accent" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                <path d="M 0 2 L 8 5 L 0 8 z" fill="var(--text-primary)" />
+              </marker>
+              <marker id="arrow-node" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                <path d="M 0 2 L 8 5 L 0 8 z" fill="var(--text-primary)" />
+              </marker>
+            </defs>
+
+            <!-- Input Feeds Node -->
+            <g transform="translate(10, 90)">
+              <rect x="0" y="0" width="110" height="80" rx="8" class="svg-node input-node" />
+              <text x="55" y="30" class="svg-node-title">LIVE FEEDS</text>
+              <text x="55" y="48" class="svg-node-desc">Weather API</text>
+              <text x="55" y="62" class="svg-node-desc">Open-Meteo</text>
+            </g>
+
+            <line x1="120" y1="130" x2="165" y2="130" stroke="var(--text-primary)" stroke-width="1.5" marker-end="url(#arrow)" />
+
+            <!-- Gemini Call 1 bounding box -->
+            <rect x="160" y="40" width="170" height="175" rx="16" fill="none" stroke="rgba(0,0,0,0.3)" stroke-width="1.2" stroke-dasharray="4 4" />
+            <text x="245" y="56" text-anchor="middle" font-family="var(--font-mono)" font-size="8px" font-weight="700" fill="var(--text-primary)" letter-spacing="0.08em">GEMINI CALL 1 (AGENT 1)</text>
+
+            <!-- Agent 1 Node -->
+            <g transform="translate(175, 78)">
+              <rect x="0" y="0" width="140" height="110" rx="12" class="svg-node agent1-node" />
+              <rect x="10" y="-10" width="120" height="20" rx="4" class="svg-node-badge badge-red" />
+              <text x="70" y="4" class="badge-text">AGENT 1</text>
+              <text x="70" y="40" class="svg-agent-title">Scenario Gen</text>
+              <text x="70" y="62" class="svg-agent-role">Creates travelers,</text>
+              <text x="70" y="77" class="svg-agent-role">stories &amp; routes</text>
+            </g>
+
+            <line x1="330" y1="130" x2="368" y2="130" stroke="var(--text-primary)" stroke-width="1.5" marker-end="url(#arrow)" />
+
+            <!-- Node.js Engine bounding box -->
+            <rect x="363" y="40" width="150" height="175" rx="16" fill="none" stroke="rgba(0,0,0,0.3)" stroke-width="1.2" stroke-dasharray="4 4" />
+            <text x="438" y="56" text-anchor="middle" font-family="var(--font-mono)" font-size="8px" font-weight="700" fill="var(--text-primary)" letter-spacing="0.08em">NODE.JS ENGINE</text>
+
+            <!-- Node.js Engine Node -->
+            <g transform="translate(373, 78)">
+              <rect x="0" y="0" width="130" height="110" rx="12" class="svg-node" style="fill: rgba(0,0,0,0.02); stroke: var(--border);" />
+              <rect x="5" y="-10" width="120" height="20" rx="4" style="fill: var(--text-primary);" />
+              <text x="65" y="4" class="badge-text">DETERMINISTIC</text>
+              <text x="65" y="40" class="svg-agent-title" style="font-size: 11px;">Travel Calc</text>
+              <text x="65" y="59" class="svg-agent-role">Computes times,</text>
+              <text x="65" y="74" class="svg-agent-role">rounds to 5-min,</text>
+              <text x="65" y="89" class="svg-agent-role">sets status</text>
+            </g>
+
+            <line x1="503" y1="130" x2="540" y2="130" stroke="var(--border-strong)" stroke-width="1.5" marker-end="url(#arrow-node)" />
+
+            <!-- Gemini Call 2 bounding box -->
+            <rect x="535" y="40" width="165" height="175" rx="16" fill="none" stroke="rgba(0,0,0,0.3)" stroke-width="1.2" stroke-dasharray="4 4" />
+            <text x="617" y="56" text-anchor="middle" font-family="var(--font-mono)" font-size="8px" font-weight="700" fill="var(--text-primary)" letter-spacing="0.08em">GEMINI CALL 2 (AGENT 2)</text>
+
+            <!-- Agent 2 Node -->
+            <g transform="translate(548, 78)">
+              <rect x="0" y="0" width="140" height="110" rx="12" class="svg-node agent2-node" />
+              <rect x="10" y="-10" width="120" height="20" rx="4" class="svg-node-badge badge-blue" />
+              <text x="70" y="4" class="badge-text">AGENT 2</text>
+              <text x="70" y="40" class="svg-agent-title">Ops Analyzer</text>
+              <text x="70" y="62" class="svg-agent-role">Verifies facts,</text>
+              <text x="70" y="77" class="svg-agent-role">writes ops summary</text>
+            </g>
+
+            <line x1="700" y1="130" x2="737" y2="130" stroke="var(--text-primary)" stroke-width="1.5" marker-end="url(#arrow)" />
+
+            <!-- Gemini Call 3 bounding box -->
+            <rect x="732" y="40" width="165" height="175" rx="16" fill="none" stroke="rgba(0,0,0,0.3)" stroke-width="1.2" stroke-dasharray="4 4" />
+            <text x="814" y="56" text-anchor="middle" font-family="var(--font-mono)" font-size="8px" font-weight="700" fill="var(--text-primary)" letter-spacing="0.08em">GEMINI CALL 3 (AGENT 3)</text>
+
+            <!-- Agent 3 Node -->
+            <g transform="translate(745, 78)">
+              <rect x="0" y="0" width="140" height="110" rx="12" class="svg-node agent3-node" />
+              <rect x="10" y="-10" width="120" height="20" rx="4" class="svg-node-badge badge-green" />
+              <text x="70" y="4" class="badge-text">AGENT 3</text>
+              <text x="70" y="40" class="svg-agent-title">CX Director</text>
+              <text x="70" y="62" class="svg-agent-role">Picks tone tier,</text>
+              <text x="70" y="77" class="svg-agent-role">writes SMS copy</text>
+            </g>
+
+            <line x1="885" y1="130" x2="922" y2="130" stroke="var(--border-strong)" stroke-width="2" marker-end="url(#arrow-accent)" />
+
+            <!-- SMS Outbox Draft Node -->
+            <g transform="translate(932, 78)">
+              <rect x="0" y="0" width="115" height="110" rx="12" class="svg-node" style="stroke: var(--border); fill: rgba(0,0,0,0.01); stroke-dasharray: 4 3;" />
+              <rect x="8" y="-10" width="99" height="20" rx="4" class="svg-node-badge badge-blue" />
+              <text x="57" y="4" class="badge-text">OUTBOX</text>
+              <text x="57" y="40" class="svg-agent-title" style="font-size: 11px;">SMS Draft</text>
+              <text x="57" y="62" class="svg-agent-role" style="font-size: 9px;">Saved to JSON,</text>
+              <text x="57" y="77" class="svg-agent-role" style="font-size: 9px;">rendered live</text>
+            </g>
+          </svg>
+        </div>
+
+        <!-- Agent Prompts Section -->
+        <div class="prompts-container">
+          <div class="prompts-container-header">
+            <h4>Gemini Agent Prompt Templates</h4>
+            <p>Expand each agent below to see the exact system instructions injected at runtime. Live data placeholders are shown in <strong>[brackets]</strong>. All schedule times and travel calculations are computed deterministically in Node.js before any agent is called — the LLMs receive verified facts, not tasks to calculate.</p>
+          </div>
+          
+          <details class="prompt-details">
+            <summary class="prompt-summary">Agent 1: Scenario Generator System Instructions</summary>
+            <pre class="prompt-pre"><code>You are the WRITER. Your only job is creative world-building. Generate exactly 1 fictional passenger group with a compelling narrative for the Apex Airways Agentic Control Center at Dulles International Airport (IAD).
+Current Time: [Current Local Time] Eastern Time
+
+For this passenger group, you MUST generate:
+1. "name": A realistic fictional name (e.g. "Liam &amp; Sophia Mercer", "Dr. Yuki Tanaka").
+2. "size": The party size as an integer between 1 and 6 inclusive.
+3. "details": A detailed fictional story narrative (exactly 2-3 sentences). The story MUST weave together their name, their starting neighborhood, their destination, their companions, and their situation.
+   ABSOLUTE PROHIBITION: Do NOT mention travel time, drive minutes, hours to airport, departure schedule, or any logistics.
+4. "origin": Starting neighborhood key. You MUST choose exactly one key from this list of valid DMV locations:
+   - "ashburn": Ashburn, VA (Loudoun County)
+   - "leesburg": Leesburg, VA (Loudoun County)
+   - "sterling": Sterling, VA (Loudoun County)
+   - "reston": Reston, VA (Fairfax County)
+   - "herndon": Herndon, VA (Fairfax County)
+   - "vienna": Vienna, VA (Fairfax County)
+   - "tysons": Tysons Corner, VA (Fairfax County)
+   - "chantilly": Chantilly, VA (Fairfax County)
+   - "rosslyn": Rosslyn, VA (Arlington County)
+   - "crystal_city": Crystal City, VA (Arlington County)
+   - "ballston": Ballston, VA (Arlington County)
+   - "dc_nw": Downtown / NW D.C. (District of Columbia)
+   - "dc_ne": Capitol Hill / NE D.C. (District of Columbia)
+   - "dc_sw": Waterfront / SW D.C. (District of Columbia)
+   - "dc_se": Anacostia / SE D.C. (District of Columbia)
+   - "bethesda": Bethesda, MD (Montgomery (MD) County)
+   - "silver_spring": Silver Spring, MD (Montgomery (MD) County)
+   - "rockville": Rockville, MD (Montgomery (MD) County)
+5. "transit": Transit mode. Must be exactly 'Drive', 'Rideshare', or 'Metro'.
+   - The following origins have NO Metro access and MUST use 'Drive' or 'Rideshare': leesburg, chantilly, sterling.
+   - All other origins may use any transit mode.
+6. "destination_code": Destination code. Choose a diverse selection across runs. Must be one of:
+   - Domestic (US): ORD, LAX, MIA, JFK
+   - International: LHR, AUA
+7. "hours_to_departure": A decimal number between 3.0 and 6.0 inclusive representing how many hours until flight departure from now. Use up to 2 decimal places of precision.
+
+DIVERSITY DIRECTIVE: Vary nationality, occupation, travel purpose, and party composition across runs. Avoid repeating the same cultural backgrounds or trip types consecutively.
+
+GUARDRAILS:
+- **Flight Hour Window:** "hours_to_departure" must be between 3.0 and 6.0. Do not use exactly 3.0 or exactly 6.0.
+- **Origin Validation:** The "origin" key MUST be exactly one of the listed keys above. Do not invent or modify any key.
+- **Transit Restrictions:** leesburg, chantilly, and sterling MUST NOT be 'Metro'. All three require 'Drive' or 'Rideshare'.
+- **Blindness Constraint:** Your "details" narrative must contain zero logistical content — no times, no durations, no schedule references of any kind.
+
+Return output strictly as a JSON object matching this schema. Do not include markdown formatting or backticks around the JSON.
+{
+  "passengers": [
+    {
+      "name": "Name",
+      "size": 2,
+      "details": "Narrative story text.",
+      "origin": "location_key",
+      "transit": "Drive",
+      "destination_code": "LHR",
+      "hours_to_departure": 4.5
+    }
+  ]
+}</code></pre>
+          </details>
+
+          <details class="prompt-details">
+            <summary class="prompt-summary">Agent 2: Operational Analyzer System Instructions</summary>
+            <pre class="prompt-pre"><code>You are the ENGINEER. Your only job is to write a strict ops log entry for the Apex Airways Agentic Control Center at Dulles International Airport (IAD).
+Current Time: [Current Local Time] Eastern Time
+
+All travel times and schedule deadlines have been computed by the Apex deterministic engine before you are called.
+You receive verified, pre-computed figures as authoritative facts — do NOT modify, recalculate, or second-guess any of them.
+
+Here is the pre-computed operational report for all passengers:
+[Trimmed JSON — contains only: id, name, transit, destination_name, calculated_travel_mins,
+must_leave_home, status, urgency_tier, decision_conditions]
+
+Note: Agent 2 receives only the fields it needs for log writing. All other computed fields
+(travel_breakdown, base_travel_mins, required_airport_arrival, etc.) are retained in the
+pipeline but not sent to Agent 2 to minimize token usage and reduce model confusion.
+
+YOUR ONLY TASK:
+For each passenger, write exactly 3 sentences as their "ops_summary":
+- S1: State their transit mode, travel time to IAD in minutes, and flight destination.
+- S2: List active conditions (from decision_conditions) and the determined status.
+- S3 (optional): Include a brief HOLD or CRITICAL flag note if urgency_tier warrants it; omit otherwise.
+
+STRICT RULES:
+- Use factual, log-entry language only. No recommendations, no hedging, no filler.
+- Hard cap: ≤60 words per ops_summary.
+- Do NOT mention travel time to the destination city — only travel time to Dulles Airport (IAD).
+
+Return output strictly as a JSON object. Do not include markdown or backticks.
+{
+  "passengers": [
+    {
+      "id": "PX-200",
+      "ops_summary": "Ops log entry here."
+    }
+  ]
+}</code></pre>
+          </details>
+
+          <details class="prompt-details">
+            <summary class="prompt-summary">Agent 3: CX Outreach Director System Instructions</summary>
+            <pre class="prompt-pre"><code>You are the COMMUNICATOR. Your only job is to write one SMS message per passenger for the Apex Airways Agentic Control Center at Dulles International Airport (IAD).
+Current Time of Run: [Current Local Time] Eastern Time
+
+All times and travel figures are pre-computed and authoritative — do NOT recalculate or modify any of them.
+
+Here is the operational report:
+[JSON object containing all passenger data including pre-computed schedule times, travel breakdown, status, and decision_conditions]
+
+HARD RULES (apply to every message):
+- 160 character hard limit per message.
+- Use the passenger's first name only — never full name.
+- "travel mins" always means minutes from home to IAD — never flight duration to destination.
+- Never fabricate data not present in the operational report.
+- No URLs, hashtags, sign-offs, or unrelated content.
+
+**Tier selection — choose ONE based on urgency_tier:**
+
+* ⚠️ APEX ALERT — urgency_tier is CRITICAL:
+  Open with "⚠️ APEX ALERT, [FirstName]:". State they must leave NOW. Include transit mode,
+  travel mins to IAD, flight destination, and every active condition from decision_conditions.
+
+* ✋ APEX HOLD — urgency_tier is HOLD:
+  Open with "✋ APEX HOLD, [FirstName]:". Tell them NOT to leave yet. Explain the active delay
+  conditions. Do NOT instruct urgency or rushing.
+
+* ✈️ Apex — urgency_tier is STANDBY or PASS:
+  Open with "✈️ Apex, [FirstName]:". Include exact must_leave_home time, transit mode,
+  travel mins to IAD, and relevant condition context from decision_conditions. Keep it calm.
+
+Priority override: If BOTH time urgency AND major destination delays apply, always use APEX HOLD.
+Never tell a passenger to rush for a flight with active major delays.
+
+Return output strictly as a JSON object. Do not include markdown or backticks.
+{
+  "passengers": [
+    {
+      "id": "PX-200",
+      "message_draft": "Message text here."
+    }
+  ]
+}</code></pre>
+          </details>
+
+        </div>
+
+      </div>
+    </div> </div>
+
+  </div>
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- App Logic -->
+  <script type="module" src="./js/app.js"></script>
+</body>
+</html>

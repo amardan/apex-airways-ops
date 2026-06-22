@@ -1,0 +1,1256 @@
+/* Apex Airways Operations Dashboard Stylesheet */
+/* Design: Minimal, portfolio-aligned. Inherits main atabak.app design tokens. */
+
+:root {
+  /* Core palette — matches main portfolio */
+  --bg-canvas: #FAF7F2;
+  --surface: rgba(0, 0, 0, 0.03);
+  --surface-hover: rgba(0, 0, 0, 0.055);
+  --border: rgba(0, 0, 0, 0.1);
+  --border-strong: rgba(0, 0, 0, 0.2);
+  --text-primary: #000000;
+  --text-secondary: #555555;
+  --text-faint: #888888;
+
+  /* Functional status colors — desaturated, not neon */
+  --status-critical: #C0392B;
+  --status-critical-bg: rgba(192, 57, 43, 0.06);
+  --status-critical-border: rgba(192, 57, 43, 0.18);
+  --status-hold: #A0620A;
+  --status-hold-bg: rgba(160, 98, 10, 0.06);
+  --status-hold-border: rgba(160, 98, 10, 0.18);
+  --status-standby: #444444;
+  --status-standby-bg: rgba(0, 0, 0, 0.03);
+  --status-standby-border: rgba(0, 0, 0, 0.1);
+
+  /* Typography */
+  --font-display: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Courier New', Courier, monospace;
+
+  /* Transitions */
+  --transition: all 0.2s ease;
+}
+
+/* ─── Reset ──────────────────────────────────────────────────────────────────── */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* ─── Base ───────────────────────────────────────────────────────────────────── */
+body {
+  background-color: var(--bg-canvas);
+  background-image: radial-gradient(rgba(0, 0, 0, 0.07) 1px, transparent 0);
+  background-size: 24px 24px;
+  color: var(--text-primary);
+  font-family: var(--font-display);
+  line-height: 1.6;
+  padding: 2rem;
+  min-height: 100vh;
+}
+
+.dashboard-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* ─── Header ─────────────────────────────────────────────────────────────────── */
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  border-bottom: 2px solid var(--text-primary);
+  padding-bottom: 1.25rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.logo-section h1 {
+  font-size: 1.6rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.2;
+}
+
+.system-status {
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  align-items: flex-end;
+}
+
+.update-ticker {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  font-family: var(--font-mono);
+}
+
+.btn-secondary-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  color: var(--text-primary);
+  text-decoration: none;
+  font-size: 0.85rem;
+  font-weight: 700;
+  border-bottom: 2px solid var(--text-primary);
+  padding-bottom: 0.1rem;
+  transition: opacity 0.2s ease;
+}
+
+.btn-secondary-link:hover {
+  opacity: 0.6;
+}
+
+/* ─── Tab Navigation ─────────────────────────────────────────────────────────── */
+.tab-navigation {
+  display: flex;
+  gap: 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.tab-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.6rem 1.1rem;
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-secondary);
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.tab-btn i,
+.tab-btn svg {
+  width: 13px;
+  height: 13px;
+}
+
+.tab-btn:hover {
+  color: var(--text-primary);
+}
+
+.tab-btn.active {
+  color: var(--text-primary);
+  border-bottom-color: var(--text-primary);
+}
+
+/* ─── Tab Content ────────────────────────────────────────────────────────────── */
+.tab-content {
+  display: none;
+}
+
+.tab-content.active {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding-top: 1.25rem;
+}
+
+/* ─── Weather Status Bar ─────────────────────────────────────────────────────── */
+.weather-status-bar {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 0.65rem 1.1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.current-weather {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.current-weather .hub-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  letter-spacing: 0.05em;
+  border-right: 1px solid var(--border);
+  padding-right: 0.75rem;
+}
+
+.current-weather .temp {
+  font-size: 1.2rem;
+  font-weight: 800;
+}
+
+.current-weather .desc {
+  font-size: 0.75rem;
+  font-family: var(--font-mono);
+  color: var(--text-secondary);
+}
+
+.forecast-section {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.forecast-section .forecast-label {
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+.forecast-timeline {
+  display: flex;
+  gap: 0.4rem;
+  align-items: center;
+}
+
+.forecast-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.2rem;
+  background: var(--bg-canvas);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 0.35rem 0.55rem;
+  min-width: 60px;
+  transition: var(--transition);
+}
+
+.forecast-item:hover {
+  border-color: var(--border-strong);
+}
+
+.forecast-item .time {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+}
+
+.forecast-item .temp {
+  font-size: 0.78rem;
+  font-weight: 800;
+  color: var(--text-primary);
+}
+
+.forecast-item .forecast-icon {
+  width: 12px;
+  height: 12px;
+  color: var(--text-secondary);
+}
+
+/* ─── Disruption Badge ───────────────────────────────────────────────────────── */
+.disruption-badge {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 0.6rem;
+  padding: 0.1rem 0.35rem;
+  font-size: 0.65rem;
+  font-weight: 700;
+  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.04);
+  border: 1px solid var(--border);
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+/* ─── Workspace Header Row (Agent column headers) ────────────────────────────── */
+.workspace-header-row {
+  display: grid;
+  grid-template-columns: 1fr 40px 1.1fr 40px 0.9fr;
+  gap: 1.5rem;
+  margin-bottom: 1.25rem;
+}
+
+.flow-arrow-spacer {
+  width: 40px;
+}
+
+@media (max-width: 1024px) {
+  .workspace-header-row {
+    display: none;
+  }
+}
+
+.column-header {
+  border-bottom: 2px solid var(--text-primary);
+  padding-bottom: 0.65rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.column-header h2 {
+  font-size: 1.1rem;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+}
+
+.column-desc {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+
+.agent-badge {
+  display: inline-block;
+  align-self: flex-start;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 0.1rem 0.4rem;
+  border-radius: 3px;
+  background: rgba(0, 0, 0, 0.06);
+  color: var(--text-secondary);
+  border: 1px solid var(--border);
+}
+
+/* ─── Traveler Row Board ─────────────────────────────────────────────────────── */
+.traveler-list-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.traveler-row {
+  display: grid;
+  grid-template-columns: 1fr auto 1.1fr auto 0.9fr;
+  gap: 1.5rem;
+  align-items: stretch;
+  background: rgba(0, 0, 0, 0.005);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.1rem;
+  transition: var(--transition);
+}
+
+.traveler-row:hover,
+.traveler-row.highlight-active {
+  border-color: var(--border-strong);
+  background: rgba(0, 0, 0, 0.01);
+}
+
+/* CRITICAL row — subtle left accent */
+.traveler-row.critical-row {
+  border-left: 3px solid var(--status-critical);
+  border-color: var(--status-critical-border);
+  background: var(--status-critical-bg);
+}
+
+.traveler-row.critical-row:hover,
+.traveler-row.critical-row.highlight-active {
+  border-color: var(--status-critical);
+  background: rgba(192, 57, 43, 0.04);
+}
+
+.traveler-row.critical-row .flow-arrow {
+  border-color: var(--status-critical-border);
+}
+
+.traveler-row.critical-row .flow-arrow i {
+  color: var(--status-critical);
+}
+
+@media (max-width: 1024px) {
+  .traveler-row {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+    padding: 0.85rem;
+  }
+
+  .arrow-desktop {
+    display: none;
+  }
+
+  .arrow-mobile {
+    display: block;
+  }
+
+  .flow-arrow-container {
+    padding: 0.25rem 0;
+    height: auto;
+  }
+}
+
+/* ─── Flow Arrows ────────────────────────────────────────────────────────────── */
+.flow-arrow-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+.flow-arrow {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px dashed var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-canvas);
+  color: var(--text-primary);
+}
+
+.flow-arrow i {
+  width: 15px;
+  height: 15px;
+  color: var(--text-secondary);
+}
+
+.arrow-desktop {
+  display: block;
+}
+
+.arrow-mobile {
+  display: none;
+}
+
+/* ─── Passenger Card (Agent 1 column) ────────────────────────────────────────── */
+.passenger-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 0.85rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  height: 100%;
+  transition: var(--transition);
+}
+
+.passenger-card.highlight-active,
+.passenger-card:hover {
+  border-color: var(--border-strong);
+  background: rgba(0, 0, 0, 0.04);
+}
+
+.passenger-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  width: 100%;
+}
+
+.passenger-name-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.passenger-name {
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+.passenger-flight {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  background: rgba(0, 0, 0, 0.07);
+  padding: 0.1rem 0.35rem;
+  border-radius: 3px;
+  font-weight: 600;
+}
+
+.passenger-details {
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  line-height: 1.45;
+}
+
+.passenger-meta {
+  display: flex;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+  font-size: 0.7rem;
+  font-family: var(--font-mono);
+  margin-top: 0.15rem;
+}
+
+.passenger-badge {
+  padding: 0.1rem 0.45rem;
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.04);
+  border: 1px solid var(--border);
+  white-space: nowrap;
+}
+
+/* Status badges on passenger card */
+.passenger-badge.action {
+  background: var(--status-critical-bg);
+  border-color: var(--status-critical-border);
+  color: var(--status-critical);
+}
+
+.passenger-badge.hold {
+  background: var(--status-hold-bg);
+  border-color: var(--status-hold-border);
+  color: var(--status-hold);
+}
+
+.passenger-badge.wait {
+  background: var(--status-standby-bg);
+  border-color: var(--status-standby-border);
+  color: var(--status-standby);
+}
+
+/* ─── Analysis Card (Agent 2 column) ─────────────────────────────────────────── */
+.analysis-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 0.85rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  height: 100%;
+  transition: var(--transition);
+}
+
+.analysis-card.highlight-active {
+  border-color: var(--border-strong);
+  background: rgba(0, 0, 0, 0.04);
+}
+
+.analysis-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 0.4rem;
+  margin-bottom: 0.1rem;
+}
+
+.analysis-card-header .passenger-flight {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  background: rgba(0, 0, 0, 0.07);
+  padding: 0.1rem 0.35rem;
+  border-radius: 3px;
+  font-weight: 600;
+}
+
+.analysis-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.35rem 0.75rem;
+}
+
+.analysis-cell {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.72rem;
+  border-bottom: 1px dashed rgba(0, 0, 0, 0.05);
+  padding-bottom: 0.1rem;
+}
+
+.analysis-cell .label {
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  font-size: 0.65rem;
+  letter-spacing: 0.03em;
+}
+
+.analysis-cell .value {
+  font-weight: 600;
+}
+
+.font-mono {
+  font-family: var(--font-mono);
+}
+
+/* Ops summary mini block (replaces dark terminal) */
+.mini-terminal {
+  background: rgba(0, 0, 0, 0.025);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 0.55rem 0.7rem;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--text-secondary);
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  line-height: 1.4;
+}
+
+.mini-terminal-line {
+  line-height: 1.35;
+  white-space: pre-wrap;
+  color: var(--text-secondary);
+}
+
+/* ─── CX Card (Agent 3 column) ───────────────────────────────────────────────── */
+.cx-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 0.85rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  height: 100%;
+  transition: var(--transition);
+}
+
+.cx-card.highlight-active {
+  border-color: var(--border-strong);
+  background: rgba(0, 0, 0, 0.04);
+}
+
+.cx-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 0.4rem;
+}
+
+.cx-card-header .cx-phone {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  letter-spacing: 0.04em;
+}
+
+.cx-card-header .status-badge {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 0.1rem 0.4rem;
+  border-radius: 3px;
+  background: rgba(0, 0, 0, 0.04);
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+.cx-card-header .status-badge.high {
+  background: var(--status-critical-bg);
+  border-color: var(--status-critical-border);
+  color: var(--status-critical);
+}
+
+.cx-card-header .status-badge.normal {
+  background: var(--status-standby-bg);
+  border-color: var(--status-standby-border);
+  color: var(--status-standby);
+}
+
+/* SMS chat bubble container */
+.cx-card-content {
+  font-size: 0.8rem;
+  font-family: var(--font-display);
+  background: rgba(0, 0, 0, 0.02);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0.65rem;
+  min-height: 72px;
+  display: flex;
+  flex-direction: column;
+}
+
+.sms-type-label {
+  font-size: 0.6rem;
+  color: var(--text-faint);
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-weight: 700;
+  margin-bottom: 0.35rem;
+}
+
+/* SMS bubble — portfolio-aligned colors */
+.sms-preview-bubble {
+  max-width: 88%;
+  align-self: flex-end;
+  padding: 0.5rem 0.75rem;
+  border-radius: 16px;
+  border-bottom-right-radius: 3px;
+  font-size: 0.74rem;
+  line-height: 1.35;
+  position: relative;
+  word-wrap: break-word;
+  margin-right: 6px;
+}
+
+/* Standby / normal — muted dark bubble */
+.sms-preview-bubble.normal {
+  background: #1a1a1a;
+  color: #f5f5f5;
+}
+
+/* Action required / critical — desaturated red */
+.sms-preview-bubble.high {
+  background: var(--status-critical);
+  color: #ffffff;
+}
+
+/* HOLD — amber tint */
+.sms-preview-bubble.hold {
+  background: #7A4F00;
+  color: #ffffff;
+}
+
+.sms-delivered-status {
+  font-size: 0.6rem;
+  color: var(--text-faint);
+  text-align: right;
+  margin-top: 4px;
+  margin-right: 8px;
+  align-self: flex-end;
+}
+
+/* ─── Verbose JSON Panels ─────────────────────────────────────────────────────── */
+.verbose-details {
+  margin-top: 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.verbose-summary {
+  padding: 0.4rem 0.65rem;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: var(--text-faint);
+  cursor: pointer;
+  user-select: none;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  background: rgba(0, 0, 0, 0.02);
+  transition: background 0.15s ease;
+}
+
+.verbose-summary::-webkit-details-marker {
+  display: none;
+}
+
+.verbose-summary::after {
+  content: "→";
+  margin-left: auto;
+  font-weight: bold;
+  transition: transform 0.2s ease;
+}
+
+.verbose-details[open] .verbose-summary::after {
+  transform: rotate(90deg);
+}
+
+.verbose-summary:hover {
+  background: rgba(0, 0, 0, 0.04);
+  color: var(--text-secondary);
+}
+
+.verbose-details[open] .verbose-summary {
+  border-bottom: 1px solid var(--border);
+}
+
+.verbose-summary i,
+.verbose-summary svg {
+  width: 11px;
+  height: 11px;
+}
+
+.verbose-pre {
+  margin: 0;
+  padding: 0.65rem;
+  background: var(--bg-canvas);
+  overflow-x: auto;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: var(--text-secondary);
+  line-height: 1.4;
+  white-space: pre-wrap;
+}
+
+/* ─── Control Buttons ─────────────────────────────────────────────────────────── */
+.control-btn {
+  padding: 0.45rem 0.9rem;
+  border-radius: 6px;
+  border: 1px solid var(--text-primary);
+  background-color: var(--text-primary);
+  color: var(--bg-canvas);
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: var(--transition);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.control-btn:hover {
+  background-color: #333;
+  transform: translateY(-1px);
+}
+
+/* ─── Workflow Explained Tab ─────────────────────────────────────────────────── */
+.workflow-section {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.workflow-header h2 {
+  font-size: 1.3rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  margin-bottom: 0.5rem;
+}
+
+.workflow-header p {
+  font-size: 0.85rem;
+  line-height: 1.65;
+  color: var(--text-secondary);
+}
+
+.workflow-section-title {
+  margin-top: 1.5rem;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 0.5rem;
+}
+
+.workflow-section-title h3 {
+  font-size: 1rem;
+  font-family: var(--font-display);
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 700;
+}
+
+.workflow-section-title h3 i,
+.workflow-section-title h3 svg {
+  width: 16px;
+  height: 16px;
+  color: var(--text-secondary);
+}
+
+.github-repo-link {
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--font-mono);
+  font-size: 0.73rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  text-decoration: none;
+  background: rgba(0, 0, 0, 0.03);
+  border: 1px solid var(--border);
+  padding: 0.35rem 0.75rem;
+  border-radius: 5px;
+  transition: var(--transition);
+  gap: 0.3rem;
+}
+
+.github-repo-link:hover {
+  background: var(--text-primary);
+  color: var(--bg-canvas);
+  border-color: var(--text-primary);
+}
+
+/* ─── Step Cards Grid ─────────────────────────────────────────────────────────── */
+.workflow-steps-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.25rem;
+}
+
+.workflow-step-card {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--bg-canvas);
+  overflow: hidden;
+  transition: border-color 0.2s ease;
+}
+
+.workflow-step-card:hover {
+  border-color: var(--border-strong);
+}
+
+.step-card-header {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+}
+
+.step-number-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--text-primary);
+  color: var(--bg-canvas);
+  font-size: 0.68rem;
+  font-weight: 800;
+  font-family: var(--font-mono);
+  flex-shrink: 0;
+}
+
+.step-card-header h3 {
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.step-card-body {
+  padding: 0.85rem 1rem 1.1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.step-card-body p {
+  font-size: 0.8rem;
+  line-height: 1.55;
+  color: var(--text-secondary);
+}
+
+.step-card-body ul {
+  list-style-type: disc;
+  padding-left: 1.1rem;
+}
+
+.step-card-body li {
+  font-size: 0.78rem;
+  line-height: 1.5;
+  color: var(--text-secondary);
+}
+
+.step-card-body li strong {
+  color: var(--text-primary);
+}
+
+/* ─── SVG Flow Diagram ────────────────────────────────────────────────────────── */
+.workflow-diagram-container {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 1.5rem;
+  overflow-x: auto;
+}
+
+.workflow-svg {
+  width: 100%;
+  max-width: 940px;
+  height: auto;
+  margin: 0 auto;
+  display: block;
+}
+
+.svg-node {
+  fill: var(--bg-canvas);
+  stroke: var(--border);
+  stroke-width: 1.5;
+}
+
+.svg-node.input-node {
+  fill: rgba(0, 0, 0, 0.02);
+  stroke: rgba(0, 0, 0, 0.2);
+  stroke-dasharray: 4 3;
+}
+
+.svg-node.agent1-node { stroke: rgba(0, 0, 0, 0.3); stroke-width: 1.5; }
+.svg-node.agent2-node { stroke: rgba(0, 0, 0, 0.3); stroke-width: 1.5; }
+.svg-node.agent3-node { stroke: rgba(0, 0, 0, 0.3); stroke-width: 1.5; }
+
+.svg-node-badge { stroke: none; }
+.badge-red   { fill: var(--text-primary); }
+.badge-blue  { fill: var(--text-primary); }
+.badge-green { fill: var(--text-primary); }
+
+.badge-text {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 700;
+  fill: var(--bg-canvas);
+  text-anchor: middle;
+  letter-spacing: 0.08em;
+}
+
+.svg-node-title {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  fill: var(--text-primary);
+  text-anchor: middle;
+  letter-spacing: 0.06em;
+}
+
+.svg-node-desc {
+  font-family: var(--font-display);
+  font-size: 10px;
+  fill: var(--text-secondary);
+  text-anchor: middle;
+}
+
+.svg-agent-title {
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 700;
+  fill: var(--text-primary);
+  text-anchor: middle;
+}
+
+.svg-agent-role {
+  font-family: var(--font-display);
+  font-size: 10px;
+  fill: var(--text-secondary);
+  text-anchor: middle;
+}
+
+/* ─── Prompt Blocks (Workflow tab) ───────────────────────────────────────────── */
+.prompts-container {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 1.25rem;
+  background: var(--surface);
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.prompts-container-header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  margin-bottom: 0.35rem;
+}
+
+.prompts-container-header h4 {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.prompts-container-header p {
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+}
+
+.prompt-details {
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.prompt-summary {
+  padding: 0.65rem 0.9rem;
+  font-family: var(--font-display);
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  cursor: pointer;
+  user-select: none;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(0, 0, 0, 0.02);
+  transition: background 0.15s ease;
+}
+
+.prompt-summary::after {
+  content: "→";
+  font-family: var(--font-mono);
+  font-weight: bold;
+  transition: transform 0.2s ease;
+}
+
+.prompt-details[open] .prompt-summary::after {
+  transform: rotate(90deg);
+}
+
+.prompt-summary:hover {
+  background: rgba(0, 0, 0, 0.04);
+}
+
+.prompt-details[open] .prompt-summary {
+  border-bottom: 1px solid var(--border);
+}
+
+.prompt-pre {
+  margin: 0;
+  padding: 0.85rem;
+  background: var(--bg-canvas);
+  overflow-x: auto;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  max-height: 320px;
+  overflow-y: auto;
+  white-space: pre-wrap;
+}
+
+/* ─── Location Table ─────────────────────────────────────────────────────────── */
+.location-db-container {
+  background: var(--bg-canvas);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 1.25rem;
+}
+
+.location-db-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.4rem;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.location-db-container h4 {
+  font-size: 0.95rem;
+  font-weight: 800;
+}
+
+.db-tech-badge {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  background: rgba(0, 0, 0, 0.05);
+  color: var(--text-secondary);
+  border: 1px solid var(--border);
+  padding: 0.2rem 0.45rem;
+  border-radius: 3px;
+  font-weight: 700;
+}
+
+.db-explanation {
+  font-size: 0.8rem;
+  line-height: 1.55;
+  color: var(--text-secondary);
+  margin-bottom: 1rem;
+  max-width: 800px;
+}
+
+.table-scroll-wrapper {
+  max-height: 300px;
+  overflow-y: auto;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--bg-canvas);
+}
+
+.location-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.76rem;
+  text-align: left;
+}
+
+.location-table th,
+.location-table td {
+  padding: 0.6rem 0.85rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.location-table th {
+  background: rgba(0, 0, 0, 0.03);
+  color: var(--text-primary);
+  font-weight: 700;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  border-bottom: 2px solid var(--border);
+}
+
+.location-table tbody tr:hover {
+  background: rgba(0, 0, 0, 0.015);
+}
+
+.location-table td code {
+  background: rgba(0, 0, 0, 0.05);
+  padding: 0.12rem 0.3rem;
+  border-radius: 3px;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+}
+
+.badge-yes {
+  background: rgba(0, 0, 0, 0.04);
+  color: var(--text-primary);
+  border: 1px solid var(--border);
+  padding: 0.12rem 0.4rem;
+  border-radius: 3px;
+  font-weight: 700;
+  font-size: 0.68rem;
+}
+
+.badge-no {
+  background: transparent;
+  color: var(--text-faint);
+  font-size: 0.68rem;
+}
+
+.badge-warning {
+  background: var(--status-critical-bg);
+  color: var(--status-critical);
+  border: 1px solid var(--status-critical-border);
+  padding: 0.12rem 0.4rem;
+  border-radius: 3px;
+  font-weight: 700;
+  font-size: 0.68rem;
+}
+
+/* ─── Misc ───────────────────────────────────────────────────────────────────── */
+.error-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 2.5rem 1.25rem;
+  background: var(--status-critical-bg);
+  border: 1px dashed var(--status-critical-border);
+  border-radius: 12px;
+  max-width: 560px;
+  margin: 1.5rem auto;
+}
+
+/* Border-color variable alias for workflow tab sections */
+.workflow-section-title {
+  --border-color: var(--border);
+}

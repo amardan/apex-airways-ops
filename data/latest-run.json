@@ -1,0 +1,103 @@
+{
+  "timestamp": "2026-06-22T17:39:40.321Z",
+  "disruption_level": "LOW",
+  "iad_weather": {
+    "temp": 90,
+    "condition": "Partly Cloudy",
+    "humidity": 48,
+    "wind_mph": 13,
+    "forecast": [
+      {
+        "time": "2 PM",
+        "temp": 91,
+        "condition": "Partly Cloudy"
+      },
+      {
+        "time": "3 PM",
+        "temp": 93,
+        "condition": "Partly Cloudy"
+      },
+      {
+        "time": "4 PM",
+        "temp": 94,
+        "condition": "Partly Cloudy"
+      },
+      {
+        "time": "5 PM",
+        "temp": 77,
+        "condition": "Drizzle"
+      },
+      {
+        "time": "6 PM",
+        "temp": 76,
+        "condition": "Rain"
+      }
+    ]
+  },
+  "destinations": {
+    "ORD": {
+      "name": "Chicago O'Hare",
+      "weather": "Partly Cloudy",
+      "temp": 67,
+      "status": "Normal"
+    },
+    "LHR": {
+      "name": "London Heathrow",
+      "weather": "Partly Cloudy",
+      "temp": 79,
+      "status": "Normal"
+    },
+    "LAX": {
+      "name": "Los Angeles",
+      "weather": "Partly Cloudy",
+      "temp": 67,
+      "status": "Normal"
+    },
+    "MIA": {
+      "name": "Miami",
+      "weather": "Thunderstorm",
+      "temp": 91,
+      "status": "Major Delays"
+    },
+    "JFK": {
+      "name": "New York JFK",
+      "weather": "Partly Cloudy",
+      "temp": 76,
+      "status": "Normal"
+    },
+    "AUA": {
+      "name": "Aruba",
+      "weather": "Partly Cloudy",
+      "temp": 85,
+      "status": "Normal"
+    }
+  },
+  "passengers": [
+    {
+      "id": "PX-200",
+      "name": "Dr. Aris Thorne",
+      "size": 1,
+      "details": "Dr. Aris Thorne is a leading astrophysicist traveling solo, heading to a crucial international symposium on planetary habitability. He's coming from his research lab, deeply engrossed in a new paper about exoplanet atmospheric composition, and is eager to present his findings and collaborate with global colleagues.",
+      "origin": "bethesda",
+      "origin_name": "Bethesda, MD",
+      "transit": "Metro",
+      "destination_code": "LAX",
+      "destination_name": "Los Angeles",
+      "destination_status": "Normal",
+      "departure_time": "5:35 PM",
+      "hours_to_departure": 3.9,
+      "is_international": false,
+      "base_travel_mins": 75,
+      "calculated_travel_mins": 75,
+      "travel_breakdown": "Base Metro time: 75m.",
+      "required_airport_arrival": "3:35 PM",
+      "must_leave_home": "2:20 PM",
+      "scheduled_send_time": "1:50 PM",
+      "status": "PASS / WAIT",
+      "urgency_tier": "STANDBY",
+      "decision_conditions": "weather clear and no rush hour",
+      "ops_summary": "Passenger PX-200 is utilizing Metro with a 75-minute travel time to IAD for their flight to Los Angeles. Conditions are weather clear and no rush hour, resulting in a PASS / WAIT status.",
+      "message_draft": "✈️ Apex, Aris. You must leave home by 2:20 PM via Metro (75 mins to IAD). Weather clear and no rush hour expected."
+    }
+  ]
+}
